@@ -1,4 +1,4 @@
-name: Simple workflow
+name: Build
 
 on:
   push:
@@ -19,6 +19,13 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
+
+    - name: Update MinSDK in AndroidManifest.xml
+      run: |
+        # 如果你的 MinSDK 是在 AndroidManifest.xml 里声明的（通常是 uses-sdk），用下面命令
+        sed -i 's/android:minSdkVersion="[0-9]*"/android:minSdkVersion="21"/g' app/src/main/AndroidManifest.xml || true
+        # 如果你的 MinSDK 是在 build.gradle 里声明的（常见于现代项目），用下面命令
+        sed -i 's/minSdkVersion [0-9]\+/minSdkVersion 21/g' app/build.gradle || true
 
     - name: Cache Gradle packages
       uses: actions/cache@v4
